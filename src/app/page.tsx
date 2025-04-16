@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -39,7 +39,8 @@ export default function Home() {
         return;
       }
 
-      const pwaURL = `https://pwa-generator.com/pwa?url=${url}`;
+      // Use pwabuilder.com to generate the PWA link
+      const pwaURL = `https://pwabuilder.com/iframe-redirect/?url=${encodeURIComponent(url)}`;
       setPwaLink(pwaURL);
       setQrCode(pwaURL);
     } catch (e: any) {
@@ -114,4 +115,3 @@ export default function Home() {
     </div>
   );
 }
-
