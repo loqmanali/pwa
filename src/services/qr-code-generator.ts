@@ -1,3 +1,4 @@
+
 /**
  * Represents the QR code data as a string.
  */

@@ -1,15 +1,14 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { generateQRCode } from "@/services/qr-code-generator";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Icons } from "@/components/icons";
 import { validateUrl } from "@/ai/flows/validate-url";
-import { useEffect } from "react";
 import { useToast } from "@/hooks/use-toast";
+import QRCode from 'qrcode.react';
 
 export default function Home() {
   const [url, setUrl] = useState("");
@@ -42,8 +41,7 @@ export default function Home() {
 
       const pwaURL = `https://pwa-generator.com/pwa?url=${url}`;
       setPwaLink(pwaURL);
-      const qrCodeData = await generateQRCode(pwaURL);
-      setQrCode(qrCodeData);
+      setQrCode(pwaURL);
     } catch (e: any) {
       setError("Failed to generate PWA link.");
     } finally {
@@ -108,7 +106,7 @@ export default function Home() {
           {qrCode && (
             <div className="grid gap-2">
               <p>QR Code:</p>
-              <img src="https://picsum.photos/200/200" alt="QR Code" className="rounded-md shadow-md" />
+              <QRCode value={qrCode} size={200} level="H" className="rounded-md shadow-md" />
             </div>
           )}
         </CardContent>
@@ -116,4 +114,3 @@ export default function Home() {
     </div>
   );
 }
-
