@@ -9,6 +9,7 @@ import { Icons } from "@/components/icons";
 import { validateUrl } from "@/ai/flows/validate-url";
 import { useToast } from "@/hooks/use-toast";
 import { QRCodeCanvas } from 'qrcode.react';
+import { generatePwaUrl } from "@/ai/flows/generate-pwa-url";
 
 export default function Home() {
   const [url, setUrl] = useState("");
@@ -39,10 +40,10 @@ export default function Home() {
         return;
       }
 
-      // Use pwabuilder.com to generate the PWA link
-      const pwaURL = `https://pwabuilder.com/iframe-redirect/?url=${encodeURIComponent(url)}`;
-      setPwaLink(pwaURL);
-      setQrCode(pwaURL);
+      // Use the new generatePwaUrl flow to generate the PWA link
+      const pwaResult = await generatePwaUrl({ url });
+      setPwaLink(pwaResult.pwaUrl);
+      setQrCode(pwaResult.pwaUrl);
     } catch (e: any) {
       setError("Failed to generate PWA link.");
     } finally {
