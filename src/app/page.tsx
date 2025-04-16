@@ -9,6 +9,7 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Icons } from "@/components/icons";
 import { validateUrl } from "@/ai/flows/validate-url";
 import { useEffect } from "react";
+import { useToast } from "@/hooks/use-toast";
 
 export default function Home() {
   const [url, setUrl] = useState("");
@@ -16,6 +17,7 @@ export default function Home() {
   const [qrCode, setQrCode] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 	const [isValidating, setIsValidating] = useState(false);
+  const { toast } = useToast();
 
   const generatePwa = async () => {
     setError(null);
@@ -47,6 +49,16 @@ export default function Home() {
     } finally {
 			setIsValidating(false);
 		}
+  };
+
+  const copyPwaLink = () => {
+    if (pwaLink) {
+      navigator.clipboard.writeText(pwaLink);
+      toast({
+        title: "PWA Link Copied!",
+        description: "The PWA link has been copied to your clipboard.",
+      });
+    }
   };
 
   return (
@@ -84,7 +96,13 @@ export default function Home() {
           {pwaLink && (
             <div className="grid gap-2">
               <p>PWA Link:</p>
-              <Input type="text" value={pwaLink} readOnly />
+              <div className="flex items-center space-x-2">
+                <Input type="text" value={pwaLink} readOnly />
+                <Button variant="secondary" size="sm" onClick={copyPwaLink}>
+                  <Icons.copy className="h-4 w-4" />
+                  Copy
+                </Button>
+              </div>
             </div>
           )}
           {qrCode && (
@@ -98,3 +116,4 @@ export default function Home() {
     </div>
   );
 }
+
