@@ -9,22 +9,8 @@
 
 import {ai} from '@/ai/ai-instance';
 import {z} from 'genkit';
-import { initializeApp } from 'firebase/app';
-import { getFirestore, doc, setDoc } from 'firebase/firestore';
-
-const firebaseConfig = {
-  apiKey: process.env.FIREBASE_API_KEY,
-  authDomain: process.env.FIREBASE_AUTH_DOMAIN,
-  projectId: process.env.FIREBASE_PROJECT_ID,
-  storageBucket: process.env.FIREBASE_STORAGE_BUCKET,
-  messagingSenderId: process.env.FIREBASE_MESSAGING_SENDER_ID,
-  appId: process.env.FIREBASE_APP_ID,
-  measurementId: process.env.FIREBASE_MEASUREMENT_ID
-};
-
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
+import fs from 'fs/promises';
+import path from 'path';
 
 const GeneratePwaUrlInputSchema = z.object({
   url: z.string().describe('The URL to generate a PWA for.'),
@@ -61,6 +47,12 @@ Unique ID: {{{uniqueId}}}
 Generate a unique PWA URL based on the input URL and unique ID.`,
 });
 
+async function savePWAConfig(uniqueId: string, pwaConfig: any) {
+  const filePath = path.join(process.cwd(), 'pwa-configs', `${uniqueId}.json`);
+  await fs.writeFile(filePath, JSON.stringify(pwaConfig));
+  return filePath;
+}
+
 const generatePwaUrlFlow = ai.defineFlow<
   typeof GeneratePwaUrlInputSchema,
   typeof GeneratePwaUrlOutputSchema
@@ -78,12 +70,11 @@ const generatePwaUrlFlow = ai.defineFlow<
       // Add any other PWA configurations here.
     };
 
-    // Store the PWA configuration in Firebase Firestore.
+    // Store the PWA configuration in the file system.
     try {
-      const docRef = doc(db, "pwaConfigs", uniqueId);
-      await setDoc(docRef, pwaConfig);
-      console.log("Document written with ID: ", uniqueId);
-    } catch (e) {
+      const filePath = await savePWAConfig(uniqueId, pwaConfig);
+      console.log("PWA configuration written to: ", filePath);
+    } catch (e: any) {
       console.error("Error adding document: ", e);
       throw new Error("Failed to store PWA configuration.");
     }
