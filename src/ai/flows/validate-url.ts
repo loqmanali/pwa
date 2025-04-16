@@ -38,7 +38,7 @@ const validateUrlPrompt = ai.definePrompt({
       reason: z.string().optional().describe('The reason the URL is invalid, if applicable.'),
     }),
   },
-  prompt: `You are an AI that validates URLs.  Given the URL, determine if it is a valid and active website.
+  prompt: `You are an AI that validates URLs.  Given the URL, determine if it is a valid and active website. Check if the domain exists and if the site responds to a basic HTTP request.
 
 URL: {{{url}}}
 
