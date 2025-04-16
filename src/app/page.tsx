@@ -8,7 +8,7 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Icons } from "@/components/icons";
 import { validateUrl } from "@/ai/flows/validate-url";
 import { useToast } from "@/hooks/use-toast";
-import QRCode from 'qrcode.react';
+import { QRCodeCanvas } from 'qrcode.react';
 
 export default function Home() {
   const [url, setUrl] = useState("");
@@ -106,7 +106,7 @@ export default function Home() {
           {qrCode && (
             <div className="grid gap-2">
               <p>QR Code:</p>
-              <QRCode value={qrCode} size={200} level="H" className="rounded-md shadow-md" />
+              <QRCodeCanvas value={qrCode} size={200} level="H" className="rounded-md shadow-md" />
             </div>
           )}
         </CardContent>
@@ -114,3 +114,4 @@ export default function Home() {
     </div>
   );
 }
+
