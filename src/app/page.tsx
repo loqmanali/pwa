@@ -8,7 +8,7 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Icons } from "@/components/icons";
 import { validateUrl } from "@/ai/flows/validate-url";
 import { useToast } from "@/hooks/use-toast";
-import { QRCodeCanvas } from 'qrcode.react';
+import QRCodeCanvas from 'qrcode.react';
 import { generatePwaUrl } from "@/ai/flows/generate-pwa-url";
 
 export default function Home() {
@@ -44,8 +44,19 @@ export default function Home() {
       const pwaResult = await generatePwaUrl({ url });
       setPwaLink(pwaResult.pwaUrl);
       setQrCode(pwaResult.pwaUrl);
+
+      toast({
+        title: "PWA Link Generated!",
+        description: "The PWA link has been successfully generated.",
+      });
     } catch (e: any) {
+      console.error("Failed to generate PWA link:", e);
       setError("Failed to generate PWA link.");
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "Failed to generate PWA link.",
+      });
     } finally {
 			setIsValidating(false);
 		}
