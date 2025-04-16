@@ -33,6 +33,8 @@ export default function Home() {
 
       if (!validationResult.isValid) {
         setError(validationResult.reason || "Invalid URL.");
+				setQrCode(null);
+				setPwaLink(null);
         return;
       }
 
